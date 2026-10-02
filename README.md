@@ -47,8 +47,8 @@ Using MongoDB allows EventSync to store registrations directly inside the Event 
   "registrations": [
     {
       "userId": "60d5ec4b1234567890abc111",
-      "userName": "shivayamini",
-      "userEmail": "shivayaminigangu@gmail.com",
+      "userName": "akshith_vodnala",
+      "userEmail": "vodnalaakshith@gmail.com",
       "status": "ACCEPTED"
     }
   ]
@@ -67,7 +67,7 @@ Using MongoDB allows EventSync to store registrations directly inside the Event 
 ### Execution Steps
 1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/yaminigangu/EventSync.git
+    git clone https://github.com/Akshith-Vodnala/EventSync.git
     cd EventSync
     ```
 2.  **Verify MongoDB Connection:** Make sure MongoDB is active on `mongodb://localhost:27017`.
