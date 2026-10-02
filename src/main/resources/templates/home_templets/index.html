@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EventSync - Discover Experiences</title>
+    <!-- Bootstrap and Google Fonts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        h1, h2, h3, h4, .navbar-brand {
+            font-family: 'Outfit', sans-serif;
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, #1e3a8a, #0f766e);
+            color: white;
+            padding: 70px 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        .card-event {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .card-event:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+        .badge-capacity {
+            background-color: #f1f5f9;
+            color: #0f766e;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .btn-register {
+            background: linear-gradient(135deg, #0d9488, #2563eb);
+            border: none;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+        .btn-register:hover {
+            box-shadow: 0 5px 15px rgba(13, 148, 136, 0.4);
+            transform: translateY(-1px);
+        }
+        .icon-box {
+            color: #0d9488;
+            margin-right: 8px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Include Header -->
+    <div th:replace="~{fragments/headers :: navbar}"></div>
+
+    <div class="container my-4">
+        <!-- Flash Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa-solid fa-circle-check mr-2"></i> <span th:text="${successMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa-solid fa-circle-exclamation mr-2"></i> <span th:text="${errorMessage}"></span>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="hero-banner text-center mb-5">
+            <div class="container" style="position: relative; z-index: 10;">
+                <span class="badge badge-pill badge-light text-primary font-weight-bold px-3 py-2 mb-3">🔥 LIVE BOOKING PORTAL</span>
+                <h1 class="display-4 font-weight-bold mb-3">Discover & Book Premium Event Packages</h1>
+                <p class="lead max-width-600 mx-auto opacity-90 mb-4">Schedule, browse, and book complete marriage planning, birthday parties, and corporate seminars in real-time.</p>
+                
+                <!-- Search bar inside hero -->
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <form th:action="@{/}" method="get">
+                            <div class="input-group shadow-sm">
+                                <input type="text" name="search" class="form-control" th:value="${searchQuery}" placeholder="Search by name, location, or type..." style="border-radius: 30px 0 0 30px; height: 50px;">
+                                <div class="input-group-append">
+                                    <button class="btn btn-dark font-weight-bold px-4" type="submit" style="border-radius: 0 30px 30px 0; background-color: #111827; border: none; height: 50px;">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="font-weight-bold mb-0 text-dark"><i class="fa-solid fa-calendar-days text-teal mr-2"></i> Available Event Packages</h3>
+            <!-- Clear search filter button -->
+            <a th:if="${searchQuery}" th:href="@{/}" class="btn btn-sm btn-outline-danger font-weight-bold">Clear Filter: <span th:text="${searchQuery}"></span> &times;</a>
+        </div>
+
+        <!-- Events Grid -->
+        <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4" th:each="event : ${events}">
+                <div class="card card-event h-100">
+                    <div class="card-body d-flex flex-column p-4">
+                        
+                        <!-- Category Badge Icons -->
+                        <div class="mb-3">
+                            <span th:if="${event.category == 'WEDDING'}" class="badge badge-danger px-3 py-1 font-weight-bold"><i class="fa-solid fa-heart mr-1"></i> Wedding</span>
+                            <span th:if="${event.category == 'BIRTHDAY'}" class="badge badge-warning text-white px-3 py-1 font-weight-bold"><i class="fa-solid fa-cake-candles mr-1"></i> Birthday</span>
+                            <span th:if="${event.category == 'CONFERENCE'}" class="badge badge-primary px-3 py-1 font-weight-bold"><i class="fa-solid fa-handshake mr-1"></i> Seminar</span>
+                            <span th:if="${event.category == 'PARTY'}" class="badge badge-info px-3 py-1 font-weight-bold"><i class="fa-solid fa-champagne-glasses mr-1"></i> Party</span>
+                            <span th:if="${event.category == 'OTHER' || event.category == null}" class="badge badge-secondary px-3 py-1 font-weight-bold"><i class="fa-solid fa-star mr-1"></i> Service</span>
+                        </div>
+
+                        <h5 class="card-title font-weight-bold text-dark mb-3" th:text="${event.title}">Event Title</h5>
+                        <p class="card-text text-muted flex-grow-1" th:text="${event.description}">Event Description</p>
+                        
+                        <div class="my-3 py-2 border-top border-bottom">
+                            <p class="mb-2 text-secondary"><i class="fa-solid fa-location-dot icon-box"></i> <strong>Venue:</strong> <span th:text="${event.venue}">Venue</span></p>
+                            <p class="mb-2 text-secondary"><i class="fa-solid fa-calendar icon-box"></i> <strong>Date:</strong> <span th:text="${event.date}">Date</span></p>
+                            <p class="mb-2 text-secondary"><i class="fa-solid fa-clock icon-box"></i> <strong>Time:</strong> <span th:text="${event.time}">Time</span></p>
+                            <p class="mb-0 text-secondary"><i class="fa-solid fa-money-bill-wave icon-box"></i> <strong>Package Cost:</strong> $<span class="font-weight-bold text-dark" th:text="${#numbers.formatDecimal(event.price, 1, 'COMMA', 2, 'POINT')}">0.00</span></p>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-2 mb-3">
+                            <span class="badge badge-capacity py-2 px-3">
+                                <i class="fa-solid fa-chair mr-1"></i> Available Seats: <span th:text="${event.availableSeats}">10</span> / <span th:text="${event.capacity}">10</span>
+                            </span>
+                        </div>
+
+                        <!-- Registration Controls -->
+                        <div class="mt-auto">
+                            <button th:if="${event.availableSeats > 0}" 
+                                    class="btn btn-block btn-primary btn-register py-2" 
+                                    data-toggle="modal" 
+                                    th:data-target="'#registerModal-' + ${event.id}">
+                                Book This Package
+                            </button>
+                            <button th:if="${event.availableSeats <= 0}" 
+                                    class="btn btn-block btn-secondary py-2" style="border-radius: 30px;" disabled>
+                                Sold Out / Fully Booked
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registration Modal -->
+                <div th:if="${event.availableSeats > 0}" class="modal fade" th:id="'registerModal-' + ${event.id}" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+                            <form th:action="@{/events/register}" method="post">
+                                <input type="hidden" name="eventId" th:value="${event.id}">
+                                <div class="modal-header bg-dark text-white" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                                    <h5 class="modal-title font-weight-bold">🎟️ Book Package: <span th:text="${event.title}">Event</span></h5>
+                                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold text-secondary">Your Full Name:</label>
+                                        <input type="text" name="name" class="form-control" placeholder="Enter your name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="font-weight-bold text-secondary">Email Address:</label>
+                                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                                    </div>
+                                    <div class="alert alert-info mt-3 py-2 small">
+                                        <i class="fa-solid fa-circle-info mr-1"></i> Booking this package will submit a pending request to the organizer.
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <button type="button" class="btn btn-outline-secondary" style="border-radius: 20px;" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-success font-weight-bold px-4" style="border-radius: 20px;">Confirm Booking Request</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- If no events -->
+            <div class="col-12 text-center my-5" th:if="${#lists.isEmpty(events)}">
+                <div class="alert alert-warning py-4 shadow-sm">
+                    <i class="fa-solid fa-circle-exclamation mr-2 fs-4"></i> No active event packages found matching your criteria.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

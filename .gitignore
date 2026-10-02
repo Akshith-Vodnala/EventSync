@@ -1,0 +1,26 @@
+# Maven build output
+target/
+*.some
+
+# STS / Eclipse metadata
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA metadata
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Log files
+*.log
+
+# System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

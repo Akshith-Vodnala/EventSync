@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EventSync - Admin Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <!-- Include Header -->
+    <div th:replace="~{fragments/headers :: navbar}"></div>
+
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-dark text-white text-center font-weight-bold py-3">
+                        🔑 Administrator Access
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/admin/dashboard}" method="get">
+                            
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" class="form-control" placeholder="admin" value="admin" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" class="form-control" placeholder="••••••••" value="admin" required>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe" checked>
+                                <label class="form-check-label text-muted" for="rememberMe">Remember session</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-block btn-primary font-weight-bold py-2 mt-4">Login to Dashboard</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

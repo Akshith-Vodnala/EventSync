@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EventSync - About Architecture</title>
+    <!-- Bootstrap and Google Fonts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        h1, h2, h3, h4, .navbar-brand {
+            font-family: 'Outfit', sans-serif;
+        }
+        .about-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            background: white;
+            padding: 45px;
+        }
+        .tech-badge {
+            background-color: #ecfdf5;
+            color: #047857;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-right: 8px;
+            margin-bottom: 10px;
+        }
+        .architecture-box {
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid #2563eb;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Include Header -->
+    <div th:replace="~{fragments/headers :: navbar}"></div>
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card about-card">
+                    <span class="text-primary font-weight-bold uppercase-spacing mb-2">SYSTEM DESIGN & ARCHITECTURE</span>
+                    <h2 class="font-weight-bold text-dark mb-4">ℹ️ Inside EventSync</h2>
+                    
+                    <p class="lead text-secondary mb-4">EventSync is an advanced, real-time Full Stack Web Application that integrates modern software patterns to manage and schedule custom service packages.</p>
+                    
+                    <hr class="my-4">
+                    
+                    <h4 class="font-weight-bold text-dark mb-3"><i class="fa-solid fa-layer-group text-primary mr-2"></i> The Technology Stack</h4>
+                    <div class="mb-4">
+                        <span class="tech-badge"><i class="fa-brands fa-envira mr-1"></i> MongoDB (NoSQL)</span>
+                        <span class="tech-badge"><i class="fa-brands fa-leaf mr-1"></i> Spring Boot 3.2</span>
+                        <span class="tech-badge"><i class="fa-solid fa-code mr-1"></i> Thymeleaf Engine</span>
+                        <span class="tech-badge"><i class="fa-brands fa-bootstrap mr-1"></i> Bootstrap 4.6</span>
+                    </div>
+
+                    <h4 class="font-weight-bold text-dark mb-3"><i class="fa-solid fa-database text-success mr-2"></i> Why MongoDB instead of SQL?</h4>
+                    <p class="text-secondary">MongoDB stores event packages as **BSON documents** (NoSQL model). For event systems, this is highly superior because:</p>
+                    <ul class="text-secondary pl-4 mb-4">
+                        <li class="mb-2"><strong>Schema Flexibility:</strong> Events can vary. A marriage package might have unique fields like 'Catering Menu', while a Tech Conference might have 'Speaker Profiles'. MongoDB handles this dynamic data effortlessly.</li>
+                        <li class="mb-2"><strong>Embedded Arrays (Denormalization):</strong> Instead of complex SQL many-to-many join tables, we embed attendee IDs directly inside the Event document (`registeredUserIds`), resulting in **O(1) read operations**!</li>
+                    </ul>
+
+                    <h4 class="font-weight-bold text-dark mb-3"><i class="fa-solid fa-shield-halved text-info mr-2"></i> Thread-Safe Booking Engine</h4>
+                    <div class="architecture-box mb-4">
+                        <p class="mb-0 text-secondary">To protect against double-bookings and booking overselling, the backend utilizes a **synchronized service registration block**. Even if 100 concurrent clients try to book the last available wedding package, our engine handles bookings sequentially, ensuring available seats are decremented accurately.</p>
+                    </div>
+
+                    <h4 class="font-weight-bold text-dark mb-3"><i class="fa-solid fa-diagram-project text-warning mr-2"></i> Clean MVC Structure</h4>
+                    <p class="text-secondary">Following strict Spring design patterns, the code is separated into isolated layers:</p>
+                    <ul class="text-secondary pl-4">
+                        <li class="mb-2"><strong>Entity Layer:</strong> Maps Java classes to MongoDB collections.</li>
+                        <li class="mb-2"><strong>Repository Layer:</strong> Manages database queries using `MongoRepository`.</li>
+                        <li class="mb-2"><strong>Service Layer:</strong> Holds atomic transactional logic.</li>
+                        <li class="mb-2"><strong>Controller Layer:</strong> Separates UI views (`frontendcontrollers`) from REST services (`controller`).</li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
